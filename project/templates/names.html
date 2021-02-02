@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang ="en">
   <head>
-    <title>Flask Project</title>
+    <title>Flask project</title>
     <link rel ="stylesheet" type = "text/css" href= "{{url_for('static',filename ='css/styles.css')}}">
   </head>
   <body>
-  <header>
-    <h1>Welcome</h1>
-  </header>
   <main>
-    <p>the fox jumped over the lazy dog</p>
+    <ul>
+    {% for name in names:%}
+        <li>{{ name }}</li>
+    {% endfor%}
+    </ul>
   </main>
   </body>
 </html>
