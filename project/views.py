@@ -11,5 +11,5 @@ def hello(name):
 
 @app.route('/list')
 def listItems():
-  name = ["Throckmorton", "Ethan", "Alvin"]
-  return render_template('names.html', name = name)
+  names = ["Throckmorton", "Ethan", "Alvin"]
+  return render_template('names.html', names = names)
