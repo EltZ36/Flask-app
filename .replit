@@ -1,3 +1,0 @@
-#don't need this to run in another ide 
-language = "python3"
-run = "python main.py"
