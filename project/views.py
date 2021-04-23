@@ -78,3 +78,75 @@ def login():
 
     # Return login form
     return render_template('login.html', form=form)
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+
+    # If user is logged in stop them from logging in again
+    if current_user.is_authenticated:
+        flash('You are already logged in', 'warning')
+        return redirect(url_for('home'))
+
+    form = SignUpForm()
+
+    if form.validate_on_submit():
+
+        # Get input email
+        email = form.email.data.lower()
+        name = form.name.data.lower()
+        password = bcrypt.generate_password_hash(form.password.data)
+
+        print(email, name, password)
+
+        # Query for user by email
+        # user = Student.query.filter_by(firstname=firstname).first()
+        user = MongoStudent.query({'email': email})
+
+        # User not found
+        if user is not None:
+            flash(
+                'Sign Up Unsuccessful. User already exsists',
+                'error')
+            print('login unsuccessful user already exists')
+        else:
+
+            # let's create the user
+            new_user = MongoStudent(email, name, password)
+
+            # add user to the database
+            new_user.insert_user()
+
+            # Redirect to index or to next
+            flash('Sign up successfully.', 'success')
+            return redirect(url_for('home'))
+
+    # Return login form
+    return render_template('signup.html', form=form)
+
+import requests
+
+query = 'the lord of the rings'
+
+def get_amazon_book_id(params):
+    openlib_API_url = 'http://openlibrary.org/search.json'
+
+    res = requests.get(url=openlib_API_url, params=params)
+
+    data = res.json()
+
+    # print(ata['docs'][0]['id_amazon'])
+
+    return data['docs'][0]['id_amazon']
+
+@app.route('/getbooks', methods=['GET', 'POST'])
+def getbooks():
+
+    book_form = BookForm()
+
+    if book_form.validate_on_submit():
+        book_name = book_form.book.data.lower()
+        params = {'q': book_name}
+        data = get_amazon_book_id(params)
+
+        return str(data)
+
+    return render_template('bookform.html', form=book_form)
